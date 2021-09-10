@@ -3,7 +3,7 @@
 ## Background
 From Bianchini and Gonzalez (2012)<sup>[[6]](#6)</sup>:
 
-*"The design of pavement structures in cold climates must account for the changes in soil properties due to the influence of freezing and thawing cycles. The calculation of **frost depth** is a fundamental step during the design and evaluation of pavement structures by the U.S. Department of Defense (DoD). The DoD uses the modified Berggren (ModBerg) equation to compute the frost penetration depth."*
+"The design of pavement structures in cold climates must account for the changes in soil properties due to the influence of freezing and thawing cycles. The calculation of frost depth is a fundamental step during the design and evaluation of pavement structures by the U.S. Department of Defense (DoD). The DoD uses the modified Berggren (ModBerg) equation to compute the frost penetration depth."
 
 The functions provided here compute the ModBerg frost depth in the same fashion as demonstrated in the The Unified Facilities Criteria (UFC) 3-130-06<sup>[[5]](#5)</sup>. Note that other tools (in particular the Pavement-Transportation Computer Assisted Structural Engineering (PCASE)) offer numerical solutions to the ModBerg equation and thus predict different values than the solutions described in the UFC and presented here. See Bianchini and Gonzalez (2012)<sup>[[6]](#6)</sup> for a discussion of those differences.
 
@@ -13,9 +13,11 @@ The Python code in `modberg.py` computes the frost depth. A simple web app (`app
 
 ### Assumptions
  - Frost depth is computed for a single layer of homogenous isotropic soil.
- - The coeffcient λ is computed as a function of the fusion parameter μ and thermal ratio α. Traditionally, λ is found "manually" by using values of μ and α to consult a chart such as this one from Aldrich and Paynter (1966)<sup>[[3]](#3)</sup>: <img src="static/correction_coeff.png" height="600">
+ - Heat flow is one-dimensional with the entire soil mass at its mean annual temperature prior to the start of the freezing season. The surface temperature changes suddenly as a step function from the mean annual temperature to a temperature v<sub>s</sub> degrees below freezing and remains at this new temperature throught the entire freezing season.
+ - The initial ground temperature is assumed to uniformly equal the mean annual air temperature. The upper boundary condition is represented by the surface freezing index.
+ - The coeffcient λ considers the effect of the temperature changes in the soil mass and is a function of the fusion parameter μ and thermal ratio α. Traditionally, λ is found "manually" by using values of μ and α to consult a chart such as this one from Aldrich and Paynter (1966)<sup>[[3]](#3)</sup>: <img src="static/correction_coeff.png" height="600">
 
-In this implemenation provided here, λ is found using an equation provided by Aldrich (1953)<sup>[[2]](#2)</sup> where gamma is found to be the inverse of the square root and implemented like so:
+Here λ is found using equation *2-33* from Aldrich (1953)<sup>[[2]](#2)</sup> implemented like so:
 
 ```python
 def compute_coeff(mu, thermal_ratio):
@@ -30,7 +32,7 @@ def compute_coeff(mu, thermal_ratio):
     return round(lc, 2)
 ```
 
-This gamma method removes the manual consultation and should produce gammas suitable for high latitudes (where the thermal ratio is low), though likely will over estimate frost depths for more temperate climates.
+This method removes manual consultation of the above figure and should produce coeffcients suitable for high latitudes (where the thermal ratio is low), though likely will over estimate frost depths for more temperate climates.
 
 ### User Inputs
  - Soil Factors

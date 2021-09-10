@@ -8,70 +8,123 @@ A module to compute Modified Berggren Frost Depth.
 
 
 def compute_volumetric_latent_heat_of_fusion(dry_ro, wc_pct):
-    """Compute the amount of heat required to melt all the ice (or freeze all the pore water) in a unit volume of soil or rock.
+    """Compute the amount of heat required to melt all the ice or freeze the pore water) in a unit volume of soil.
     Args:
         dry_ro: soil dry density (lbs per cubic foot)
         wc_pct: percent water content (percent)
-
     Returns:
         L: volumetric latent heat of fusion (BTUs per cubic foot)
     """
     L = 144 * dry_ro * (wc_pct / 100)
-    return L
+    return round(L, 2)
 
 
-def compute_average_volumetric_specific_heat(c_soil, dry_ro, wc_pct, **kwargs):
-    """Compute the quantity of heat required to change the temperature of a unit volume by one degree F.
+def compute_frozen_volumetric_specific_heat(dry_ro, wc_pct):
+    """Compute quantity of heat required to change the temperature of a frozen unit volume of soil by 1°F. The specific heat of soil solids is 0.17 BTU/lb • °F for most soils.
     Args:
-        c_soil: specific heat of soil solids (0.17 for most soils)
         dry_ro: soil dry density (lbs per cubic foot)
         wc_pct: percent water content (percent)
-        is_frozen: "frozen" or "unfrozen" soil condition
-
     Returns:
-        c: volumetric specific heat (Btus per cubic foot) * °F
+        c: volumetric specific heat (BTUs per cubic foot) • °F
     """
-    is_frozen = kwargs.get("is_frozen", None)
-    di = {"frozen": 0.5, "unfrozen": 1.0}
-    try:
-        frozen_mod = di[is_frozen.lower()]
-    except:
-        frozen_mod = 0.75
-    c = dry_ro * (c_soil + (frozen_mod * (wc_pct / 100)))
+    c = dry_ro * (0.17 + (0.5 * (wc_pct / 100)))
     return round(c, 2)
 
 
-def compute_thermal_ratio(mat, t_freeze, d, nFI):
-    """Compute the the thermal ratio.
-    The thermal ratio is a function of the initial temperature differential and the average temperature differential.
+def compute_unfrozen_volumetric_specific_heat(dry_ro, wc_pct):
+    """Compute quantity of heat required to change the temperature of an unfrozen unit volume of soil by 1°F. The specific heat of soil solids is 0.17 BTU/lb • °F for most soils.
     Args:
-        mat: mean annual ground or surface temperature (°F)
-        t_freeze: freezing temperature (32 °F)
-        d: length of freezing duration (days)
-        nFI: surface freezing index (°F • days)
+        dry_ro: soil dry density (lbs per cubic foot)
+        wc_pct: percent water content (percent)
+    Returns:
+        c: volumetric specific heat (BTUs per cubic foot) • °F
+    """
+    c = dry_ro * (0.17 + (1.0 * (wc_pct / 100)))
+    return round(c, 2)
 
+
+def compute_avg_volumetric_specific_heat(dry_ro, wc_pct):
+    """Compute quantity of heat required to change the temperature of an average unit volume of soil by 1°F. The specific heat of soil solids is 0.17 BTU/lb • °F for most soils.
+    Args:
+        dry_ro: soil dry density (lbs per cubic foot)
+        wc_pct: percent water content (percent)
+    Returns:
+        c: volumetric specific heat (BTUs per cubic foot) • °F
+    """
+    c = dry_ro * (0.17 + (0.75 * (wc_pct / 100)))
+    print(c)
+    return round(c, 2)
+
+
+def compute_seasonal_v_s(nFI, d):
+    """Compute the v_s parameter.
+
+    v_s has one of two possible meanings depending on the problem being studied. In this case, v_s is useful for computing a seasonal depth of freeze.
+
+    Args:
+        d: optional length of freezing duration (days)
+        nFI: optional surface freezing index (°F • days)
+    Returns:
+         v_s
+    """
+    v_s = nFI / d
+    return v_s
+
+
+def compute_multiyear_v_s(nFI, d):
+    """Compute the v_s parameter.
+
+    v_s has one of two possible meanings depending on the problem being studied. In this case, v_s is useful in computing multiyear freeze depths that may develop as a long-term change in the heat balance at the ground surface.
+
+    Args:
+        mat: mean annual temperature (°F)
+    Returns:
+         v_s
+    """
+    v_s = abs(mat - 32)
+    return v_s
+
+
+def compute_v_o(magt):
+    """Compute the v_o parameter.
+
+    v_o is the absolute value of the difference between the mean annual temperature BELOW THE GROUND SURFACE and 32 °F.
+
+    Args:
+        magt: mean annual temperature below the ground surface (°F)
+    Returns:
+         v_o
+    """
+    v_o = abs(magt - 32)
+    return v_o
+
+
+def compute_thermal_ratio(v_o, v_s):
+    """Compute the the thermal ratio.
+
+    The thermal ratio is the ratio of two deltas: ground temperature - freezing and surface temperature - freezing.
+
+    Args:
+        v_o
+        v_s
     Returns:
         thermal_ratio: dimensionless
     """
-    v_s = nFI / d
-    v_o = mat - t_freeze
     thermal_ratio = v_o / v_s
     return round(thermal_ratio, 3)
 
 
-def compute_fusion_parameter(nFI, d, c, L):
+def compute_fusion_parameter(v_s, c, L):
     """Compute the fusion parameter.
 
     Args:
-        nFI: surface freezing index (°F • days)
-        d: length of freezing or thawing duration (days)
+        v_s
         c: volumetric specific heat ((BTUs per cubic foot) • °F)
         L: volumetric latent heat of fusion (BTUs per cubic foot)
-
     Returns:
         mu: (dimensionless)
     """
-    mu = (nFI / d) * (c / L)
+    mu = v_s * (c / L)
     return round(mu, 3)
 
 
@@ -92,21 +145,18 @@ def compute_coeff(mu, thermal_ratio):
     Args:
         mu: the fusion parameter (dimensionless)
         thermal_ratio: thermal ratio (dimensionless)
-
     Returns
         lc: the lambda coeffcient value (dimensionless).
     """
     lc = 1.0 / (np.sqrt(1 + (mu * (thermal_ratio + 0.5))))
-
     return round(lc, 2)
 
 
-def compute_depth_of_freezing(coeff, mat, k_avg, nFI, L):
+def compute_depth_of_freezing(coeff, k_avg, nFI, L):
     """Compute the depth to which 32 °F temperatures will penetrate into the soil mass.
 
     Args:
         coeff: the lambda coeffcient (dimensionless)
-        mat: mean annual temperature (°F)
         k_avg: thermal conductivity of soil, average of frozen and unfrozen (BTU/hr • ft • °F)
         nFI: surface freezing index (°F • days)
         L: volumetric latent heat of fusion (BTUs per cubic foot)
@@ -114,31 +164,30 @@ def compute_depth_of_freezing(coeff, mat, k_avg, nFI, L):
         x: frost depth (feet)
     """
     x = coeff * np.sqrt((48 * k_avg * nFI) / L)
-    return round(x, 2)
+    return round(x, 1)
 
 
-def compute_modified_bergrenn(
-    dry_ro, wc_pct, is_frozen, mat, t_freeze, d, nFI, k_avg, c_soil=0.17
-):
+def compute_modified_bergrenn(dry_ro, wc_pct, mat, magt, d, nFI, k_avg):
     """
     Args:
     dry_ro: soil dry density (lbs per cubic foot)
     wc_pct: water content (percent)
     mat: mean annual temperature (°F)
-    t_freeze: freezing temperature (°F)
+    magt: mean annual GROUND temperature (°F)
     d: length of freezing duration (days)
     nFI: surface freezing index (°F • days)
     k_avg: thermal conductivity of soil, average of frozen and unfrozen (BTU/hr • ft • °F)
     """
 
     L = compute_volumetric_latent_heat_of_fusion(dry_ro, wc_pct)
-    c = compute_average_volumetric_specific_heat(
-        c_soil, dry_ro, wc_pct, is_frozen=is_frozen
-    )
-    thermal_ratio = compute_thermal_ratio(mat, t_freeze, d, nFI)
-    mu = compute_fusion_parameter(nFI, d, c, L)
+    c = compute_avg_volumetric_specific_heat(dry_ro, wc_pct)
+    v_s = compute_seasonal_v_s(nFI=nFI, d=d)
+    v_o = compute_v_o(magt)
+    thermal_ratio = compute_thermal_ratio(v_o, v_s)
+    mu = compute_fusion_parameter(v_s, c, L)
     lambda_coeff = compute_coeff(mu, thermal_ratio)
-    frost_depth = compute_depth_of_freezing(lambda_coeff, mat, k_avg, nFI, L)
+    frost_depth = compute_depth_of_freezing(lambda_coeff, k_avg, nFI, L)
+    print(L, c, v_s, v_o, thermal_ratio, mu, lambda_coeff)
     return frost_depth
 
 
