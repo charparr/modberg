@@ -3,18 +3,13 @@ import requests
 import pandas as pd
 
 """
-The design of pavement structures in cold climates must account for the changes in soil properties due to the influence of freezing and thawing cycles. The calculation of frost depth is a fundamental step during the design and evaluation of pavement structures by the U.S. Department of Defense (DoD). The DoD uses the modified Berggren (ModBerg) equation to compute the frost penetration depth.
-The Unified Facilities Criteria (UFC) 3-130-06 includes a methodology to manually compute the frost depth. The Pavement-Transportation Computer Assisted Structural Engineering (PCASE) software incorporates a more comprehensive numerical solution of the ModBerg equation, which in some instances predicts values slightly different than the manual solution described in the UFC.
-A module implementing the Modified Berggren equation to compute frost depth below the surface using climate projections for the mean annual temperature input.
-Assumptions:
-    A single layer of homogenous soil.
+A module to compute Modified Berggren Frost Depth.
 """
 
 
 def compute_volumetric_latent_heat_of_fusion(dry_ro, wc_pct):
     """Compute the amount of heat required to melt all the ice (or freeze all the pore water) in a unit volume of soil or rock.
     Args:
-        lhof_h2o: gravimetric latent heat of fusion of water (144 BTUs per lb)
         dry_ro: soil dry density (lbs per cubic foot)
         wc_pct: percent water content (percent)
 
@@ -70,7 +65,7 @@ def compute_fusion_parameter(nFI, d, c, L):
     Args:
         nFI: surface freezing index (°F • days)
         d: length of freezing or thawing duration (days)
-        c: volumetric specific heat ((BTUs per cubic foot) * °F)
+        c: volumetric specific heat ((BTUs per cubic foot) • °F)
         L: volumetric latent heat of fusion (BTUs per cubic foot)
 
     Returns:
@@ -81,24 +76,29 @@ def compute_fusion_parameter(nFI, d, c, L):
 
 
 def compute_coeff(mu, thermal_ratio):
-    """Compute the Lambda coeffcient (dimensionless).
+    """Compute the lambda coeffcient (dimensionless).
+
     Citation: H. P. Aldrich and H. M. Paynter, “Analytical Studies of Freezing and Thawing of Soils,” Arctic Construction and Frost Effects Laboratory, Corps of Engineers, U.S. Army, Boston, MA, First Interim Technical Report 42, Jun. 1953.
 
-    lc1 is likely to overestimate frost depth for high latitudes
-    lc2 is likely to underestimate frost depth for high latitudes
+    Other implementations:
+    lc2 = 0.707 / (np.sqrt(1 + (mu * (thermal_ratio + 0.5))))
+    lc_mean = round(np.mean([lc1, lc2]), 2)
+
+    These are included because:
+    lc may overestimate frost depth - but is suited to high latitudes
+    lc2 may underestimate frost depth - but is better for lower latitudes
     lc_mean is a middle ground
 
     Args:
         mu: the fusion parameter (dimensionless)
-        thermal_ratio (dimensionless)
+        thermal_ratio: thermal ratio (dimensionless)
 
     Returns
-        lc1: a lambda coeffcient value (dimensionless).
+        lc: the lambda coeffcient value (dimensionless).
     """
-    lc1 = 1.0 / (np.sqrt(1 + (mu * (thermal_ratio + 0.5))))
-    lc2 = 0.707 / (np.sqrt(1 + (mu * (thermal_ratio + 0.5))))
-    lc_mean = round(np.mean([lc1, lc2]), 2)
-    return round(lc1, 2)
+    lc = 1.0 / (np.sqrt(1 + (mu * (thermal_ratio + 0.5))))
+
+    return round(lc, 2)
 
 
 def compute_depth_of_freezing(coeff, mat, k_avg, nFI, L):
@@ -122,7 +122,6 @@ def compute_modified_bergrenn(
 ):
     """
     Args:
-    lhof_h2o: gravimetric latent heat of fusion of water (BTUs per lb)
     dry_ro: soil dry density (lbs per cubic foot)
     wc_pct: water content (percent)
     mat: mean annual temperature (°F)
