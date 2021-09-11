@@ -15,7 +15,9 @@ The Python code in `modberg.py` computes the frost depth. A simple web app (`app
  - Frost depth is computed for a single layer of homogenous isotropic soil.
  - Heat flow is one-dimensional with the entire soil mass at its mean annual temperature prior to the start of the freezing season. The surface temperature changes suddenly as a step function from the mean annual temperature to a temperature v<sub>s</sub> degrees below freezing and remains at this new temperature throught the entire freezing season.
  - The initial ground temperature is assumed to uniformly equal the mean annual air temperature. The upper boundary condition is represented by the surface freezing index.
- - The coeffcient λ considers the effect of the temperature changes in the soil mass and is a function of the fusion parameter μ and thermal ratio α. Traditionally, λ is found "manually" by using values of μ and α to consult a chart such as this one from Aldrich and Paynter (1966)<sup>[[3]](#3)</sup>: <img src="static/correction_coeff.png" height="600">
+ - The coeffcient λ considers the effect of the temperature changes in the soil mass and is a function of the fusion parameter μ and thermal ratio α. Traditionally, λ is found "manually" by using values of μ and α to consult a chart such as this one from Aldrich and Paynter (1966)<sup>[[3]](#3)</sup>:
+ 
+ <img src="static/correction_coeff.png" height="400">
 
 Here λ is found using equation *2-33* from Aldrich (1953)<sup>[[2]](#2)</sup> implemented like so:
 
@@ -41,7 +43,8 @@ This method removes manual consultation of the above figure and should produce c
      + Water Content
  - Climate Factors
      + Mean Annual Temperature
-     + Freezing Index
+     + Air Freezing Index
+     + n-factor to convert air freezing index to surface index 
      + Duration of the Freezing Season
 
 ## References

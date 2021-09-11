@@ -71,6 +71,29 @@ def compute_seasonal_v_s(nFI, d):
     return v_s
 
 
+def get_mat_from_api(lat, lon, period):
+    """Query the SNAP Data API for mean annual temperature using the IEM Webapp Endpoint."""
+
+    time_di = {
+        "1910-2009": "1910-2009",
+        "2040-2070": "2040_2070",
+        "2070-2100": "2070_2100",
+    }
+    api_url = f"http://snap-data.io/iem/point/{lat}/{lon}"
+    resp = requests.get(api_url).json()[time_di[period]]
+    df = pd.json_normalize(resp, sep="_")
+    di = df.to_dict()
+    all_tas = []
+    for k in di.keys():
+        if "tas" in k:
+            all_tas.append(di[k][0])
+        else:
+            pass
+    iem_mat_degC = np.mean(all_tas)
+    iem_mat_degF = (iem_mat_degC * 1.8) + 32
+    return iem_mat_degF
+
+
 def compute_multiyear_v_s(nFI, d):
     """Compute the v_s parameter.
 
@@ -189,26 +212,3 @@ def compute_modified_bergrenn(dry_ro, wc_pct, mat, magt, d, nFI, k_avg):
     frost_depth = compute_depth_of_freezing(lambda_coeff, k_avg, nFI, L)
     print(L, c, v_s, v_o, thermal_ratio, mu, lambda_coeff)
     return frost_depth
-
-
-def get_mat_from_api(lat, lon, period):
-    """Query the SNAP Data API for mean annual temperature using the IEM Webapp Endpoint."""
-
-    time_di = {
-        "1910-2009": "1910-2009",
-        "2040-2070": "2040_2070",
-        "2070-2100": "2070_2100",
-    }
-    api_url = f"http://snap-data.io/iem/point/{lat}/{lon}"
-    resp = requests.get(api_url).json()[time_di[period]]
-    df = pd.json_normalize(resp, sep="_")
-    di = df.to_dict()
-    all_tas = []
-    for k in di.keys():
-        if "tas" in k:
-            all_tas.append(di[k][0])
-        else:
-            pass
-    iem_mat_degC = np.mean(all_tas)
-    iem_mat_degF = (iem_mat_degC * 1.8) + 32
-    return iem_mat_degF
