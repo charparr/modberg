@@ -1,104 +1,86 @@
-# packages in environment at /Users/cparr/miniconda3/envs/stream-it:
-#
-# Name                    Version                   Build  Channel
-altair                    4.1.0                    pypi_0    pypi
-appnope                   0.1.2                    pypi_0    pypi
-argon2-cffi               21.1.0                   pypi_0    pypi
-astor                     0.8.1                    pypi_0    pypi
-attrs                     21.2.0                   pypi_0    pypi
-backcall                  0.2.0                    pypi_0    pypi
-backports-entry-points-selectable 1.1.0                    pypi_0    pypi
-backports-zoneinfo        0.2.1                    pypi_0    pypi
-base58                    2.1.0                    pypi_0    pypi
-bleach                    4.1.0                    pypi_0    pypi
-blinker                   1.4                      pypi_0    pypi
-ca-certificates           2021.5.30            h033912b_0    conda-forge
-cachetools                4.2.2                    pypi_0    pypi
-certifi                   2021.5.30                pypi_0    pypi
-cffi                      1.14.6                   pypi_0    pypi
-charset-normalizer        2.0.4                    pypi_0    pypi
-click                     7.1.2                    pypi_0    pypi
-debugpy                   1.4.1                    pypi_0    pypi
-decorator                 5.0.9                    pypi_0    pypi
-defusedxml                0.7.1                    pypi_0    pypi
-distlib                   0.3.2                    pypi_0    pypi
-entrypoints               0.3                      pypi_0    pypi
-filelock                  3.0.12                   pypi_0    pypi
-gitdb                     4.0.7                    pypi_0    pypi
-gitpython                 3.1.18                   pypi_0    pypi
-idna                      3.2                      pypi_0    pypi
-ipykernel                 6.3.1                    pypi_0    pypi
-ipython                   7.27.0                   pypi_0    pypi
-ipython-genutils          0.2.0                    pypi_0    pypi
-ipywidgets                7.6.4                    pypi_0    pypi
-jedi                      0.18.0                   pypi_0    pypi
-jinja2                    3.0.1                    pypi_0    pypi
-jsonschema                3.2.0                    pypi_0    pypi
-jupyter-client            7.0.2                    pypi_0    pypi
-jupyter-core              4.7.1                    pypi_0    pypi
-jupyterlab-pygments       0.1.2                    pypi_0    pypi
-jupyterlab-widgets        1.0.1                    pypi_0    pypi
-libcxx                    12.0.1               habf9029_0    conda-forge
-libffi                    3.3                  h046ec9c_2    conda-forge
-markupsafe                2.0.1                    pypi_0    pypi
-matplotlib-inline         0.1.2                    pypi_0    pypi
-mistune                   0.8.4                    pypi_0    pypi
-nbclient                  0.5.4                    pypi_0    pypi
-nbconvert                 6.1.0                    pypi_0    pypi
-nbformat                  5.1.3                    pypi_0    pypi
-ncurses                   6.2                  h2e338ed_4    conda-forge
-nest-asyncio              1.5.1                    pypi_0    pypi
-notebook                  6.4.3                    pypi_0    pypi
-numpy                     1.21.2                   pypi_0    pypi
-openssl                   1.1.1l               h0d85af4_0    conda-forge
-packaging                 21.0                     pypi_0    pypi
-pandas                    1.3.2                    pypi_0    pypi
-pandocfilters             1.4.3                    pypi_0    pypi
-parso                     0.8.2                    pypi_0    pypi
-pexpect                   4.8.0                    pypi_0    pypi
-pickleshare               0.7.5                    pypi_0    pypi
-pillow                    8.3.2                    pypi_0    pypi
-pip                       21.2.4             pyhd8ed1ab_0    conda-forge
-pipenv                    2021.5.29                pypi_0    pypi
-platformdirs              2.3.0                    pypi_0    pypi
-prometheus-client         0.11.0                   pypi_0    pypi
-prompt-toolkit            3.0.20                   pypi_0    pypi
-protobuf                  3.17.3                   pypi_0    pypi
-ptyprocess                0.7.0                    pypi_0    pypi
-pyarrow                   5.0.0                    pypi_0    pypi
-pycparser                 2.20                     pypi_0    pypi
-pydeck                    0.7.0                    pypi_0    pypi
-pygments                  2.10.0                   pypi_0    pypi
-pyparsing                 2.4.7                    pypi_0    pypi
-pyrsistent                0.18.0                   pypi_0    pypi
-python                    3.8.10          h0e5c897_0_cpython    conda-forge
-python-dateutil           2.8.2                    pypi_0    pypi
-python_abi                3.8                      2_cp38    conda-forge
-pytz                      2021.1                   pypi_0    pypi
-pyzmq                     22.2.1                   pypi_0    pypi
-readline                  8.1                  h05e3726_0    conda-forge
-requests                  2.26.0                   pypi_0    pypi
-send2trash                1.8.0                    pypi_0    pypi
-setuptools                57.4.0           py38h50d1736_0    conda-forge
-six                       1.16.0                   pypi_0    pypi
-smmap                     4.0.0                    pypi_0    pypi
-sqlite                    3.36.0               h23a322b_0    conda-forge
-streamlit                 0.88.0                   pypi_0    pypi
-terminado                 0.11.1                   pypi_0    pypi
-testpath                  0.5.0                    pypi_0    pypi
-tk                        8.6.11               h5dbffcc_1    conda-forge
-toml                      0.10.2                   pypi_0    pypi
-toolz                     0.11.1                   pypi_0    pypi
-tornado                   6.1                      pypi_0    pypi
-traitlets                 5.1.0                    pypi_0    pypi
-tzlocal                   3.0                      pypi_0    pypi
-urllib3                   1.26.6                   pypi_0    pypi
-validators                0.18.2                   pypi_0    pypi
-virtualenv                20.7.2                   pypi_0    pypi
-virtualenv-clone          0.5.6                    pypi_0    pypi
-wcwidth                   0.2.5                    pypi_0    pypi
-webencodings              0.5.1                    pypi_0    pypi
-wheel                     0.37.0             pyhd8ed1ab_1    conda-forge
-widgetsnbextension        3.5.1                    pypi_0    pypi
-xz                        5.2.5                haf1e3a3_1    conda-forge
-zlib                      1.2.11            h7795811_1010    conda-forge
+altair==4.1.0
+appnope==0.1.2
+argon2-cffi==21.1.0
+astor==0.8.1
+attrs==21.2.0
+backcall==0.2.0
+backports.entry-points-selectable==1.1.0
+backports.zoneinfo==0.2.1
+base58==2.1.0
+bleach==4.1.0
+blinker==1.4
+cachetools==4.2.2
+certifi==2021.5.30
+cffi==1.14.6
+charset-normalizer==2.0.4
+click==7.1.2
+debugpy==1.4.1
+decorator==5.0.9
+defusedxml==0.7.1
+distlib==0.3.2
+entrypoints==0.3
+filelock==3.0.12
+gitdb==4.0.7
+GitPython==3.1.18
+idna==3.2
+ipykernel==6.3.1
+ipython==7.27.0
+ipython-genutils==0.2.0
+ipywidgets==7.6.4
+jedi==0.18.0
+Jinja2==3.0.1
+jsonschema==3.2.0
+jupyter-client==7.0.2
+jupyter-core==4.7.1
+jupyterlab-pygments==0.1.2
+jupyterlab-widgets==1.0.1
+MarkupSafe==2.0.1
+matplotlib-inline==0.1.2
+mistune==0.8.4
+nbclient==0.5.4
+nbconvert==6.1.0
+nbformat==5.1.3
+nest-asyncio==1.5.1
+notebook==6.4.3
+numpy==1.21.2
+packaging==21.0
+pandas==1.3.2
+pandocfilters==1.4.3
+parso==0.8.2
+pexpect==4.8.0
+pickleshare==0.7.5
+Pillow==8.3.2
+pipenv==2021.5.29
+platformdirs==2.3.0
+prometheus-client==0.11.0
+prompt-toolkit==3.0.20
+protobuf==3.17.3
+ptyprocess==0.7.0
+pyarrow==5.0.0
+pycparser==2.20
+pydeck==0.7.0
+Pygments==2.10.0
+pyparsing==2.4.7
+pyrsistent==0.18.0
+python-dateutil==2.8.2
+pytz==2021.1
+pyzmq==22.2.1
+requests==2.26.0
+Send2Trash==1.8.0
+six==1.16.0
+smmap==4.0.0
+streamlit==0.88.0
+terminado==0.11.1
+testpath==0.5.0
+toml==0.10.2
+toolz==0.11.1
+tornado==6.1
+traitlets==5.1.0
+tzlocal==3.0
+urllib3==1.26.6
+validators==0.18.2
+virtualenv==20.7.2
+virtualenv-clone==0.5.6
+wcwidth==0.2.5
+webencodings==0.5.1
+widgetsnbextension==3.5.1
