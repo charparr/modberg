@@ -4,14 +4,14 @@ from modberg import *
 st.title("MODIFIED BERGGREN FROST DEPTH CALCULATOR")
 st.subheader("Alaska Climate Change Edition")
 
-st.subheader("Retreive the mean annual temperature (°F)")
+st.subheader("Retrieve the mean annual temperature (°F)")
 col1, col2 = st.columns(2)
 with col1:
     lat = st.number_input("latitude in Alaska", 51.229, 71.3526, 65.0)
 with col2:
     lon = st.number_input("longitude in Alaska", -179.1506, -129.9795, -147.0)
 period = st.radio(
-    "era for which to retreive the mean annual temperature",
+    "era for which to retrieve the mean annual temperature",
     ("1910-2009", "2040-2070", "2070-2100"),
 )
 mat = get_mat_from_api(lat, lon, period)
