@@ -91,7 +91,7 @@ def get_mat_from_api(lat, lon, period):
             pass
     iem_mat_degC = np.mean(all_tas)
     iem_mat_degF = (iem_mat_degC * 1.8) + 32
-    return iem_mat_degF
+    return round(iem_mat_degF, 2)
 
 
 def compute_multiyear_v_s(nFI, d):
