@@ -30,12 +30,12 @@ with col1:
 with col2:
     st.header("SOIL PARAMETERS")
     wc_pct = st.slider("water content (percent)", 1, 50, 15)
-    dry_ro = st.slider("dry unit weight (pounds per cubic foot)", 20, 150, 100)
+    dry_ro = st.slider("dry unit weight (pounds per cubic foot)", 20, 135, 100)
     k_avg = st.slider(
         "average thermal conductivity (BTU/(ft•hr•°F))",
         0.01,
         2.0,
-        0.76,
+        0.78,
     )
 
 mb = compute_modified_bergrenn(
