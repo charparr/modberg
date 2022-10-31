@@ -71,30 +71,28 @@ def compute_seasonal_v_s(nFI, d):
     return v_s
 
 
-def get_mat_from_api(lat, lon, period):
-    """Query the SNAP Data API for mean annual temperature using the IEM Webapp Endpoint."""
+def get_projected_mat_from_api(lat, lon, model, scenario, year_start, year_end):
+    """Query the SNAP Data API for mean annual temperature."""
 
-    time_di = {
-        "1910-2009": "1910-2009",
-        "2040-2070": "2040_2070",
-        "2070-2100": "2070_2100",
-    }
-    api_url = f"http://snap-data.io/iem/point/{lat}/{lon}"
-    resp = requests.get(api_url).json()[time_di[period]]
-    df = pd.json_normalize(resp, sep="_")
-    di = df.to_dict()
-    all_tas = []
-    for k in di.keys():
-        if "tas" in k:
-            all_tas.append(di[k][0])
-        else:
-            pass
-    iem_mat_degC = np.mean(all_tas)
-    iem_mat_degF = (iem_mat_degC * 1.8) + 32
-    return round(iem_mat_degF, 2)
+    api_url = f"https://earthmaps.io/mmm/temperature/all/{lat}/{lon}"
+    resp = requests.get(api_url).json()[model][scenario]
+    df = pd.json_normalize(resp, sep="_").T
+    years = [int(j.split('_')[0]) for j in df.index.values]
+    df["year"] = years
+    df.set_index("year", inplace=True)
+    mean_temp_degC = df.loc[year_start:year_end].mean()
+    mat_degF = (mean_temp_degC * 1.8) + 32
+    return float(round(mat_degF, 1))
 
 
-def compute_multiyear_v_s(nFI, d):
+def get_projected_design_fi_from_api(lat, lon, model, era):
+    """Query the SNAP Data API for design freezing index."""
+    api_url = "https://earthmaps.io/design_index/freezing/all/point/65.0628/-146.1627"
+    design_freezing_index_degF = requests.get(api_url).json()[model][era]["di"]
+    return design_freezing_index_degF
+
+
+def compute_multiyear_v_s(mat):
     """Compute the v_s parameter.
 
     v_s has one of two possible meanings depending on the problem being studied. In this case, v_s is useful in computing multiyear freeze depths that may develop as a long-term change in the heat balance at the ground surface.
@@ -190,7 +188,7 @@ def compute_depth_of_freezing(coeff, k_avg, nFI, L):
     return round(x, 1)
 
 
-def compute_modified_bergrenn(dry_ro, wc_pct, mat, magt, d, nFI, k_avg):
+def compute_modified_bergrenn(dry_ro, wc_pct, mat, magt, d, nFI, k_avg, lat, lon, model, scenario, year_start, year_end):
     """
     Args:
     dry_ro: soil dry density (lbs per cubic foot)
@@ -201,10 +199,11 @@ def compute_modified_bergrenn(dry_ro, wc_pct, mat, magt, d, nFI, k_avg):
     nFI: surface freezing index (°F • days)
     k_avg: thermal conductivity of soil, average of frozen and unfrozen (BTU/hr • ft • °F)
     """
-
+    mat = get_projected_mat_from_api(
+        lat, lon, model, scenario, year_start, year_end)
     L = compute_volumetric_latent_heat_of_fusion(dry_ro, wc_pct)
     c = compute_avg_volumetric_specific_heat(dry_ro, wc_pct)
-    v_s = compute_seasonal_v_s(nFI=nFI, d=d)
+    v_s = compute_seasonal_v_s(nFI, d)
     v_o = compute_v_o(magt)
     thermal_ratio = compute_thermal_ratio(v_o, v_s)
     mu = compute_fusion_parameter(v_s, c, L)
