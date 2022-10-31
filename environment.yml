@@ -1,7 +1,0 @@
-name: modberg
-channels:
-  - conda-forge
-  - defaults
-dependencies:
-  - streamlit
-prefix: /Users/cparr/miniconda3/envs/modberg
