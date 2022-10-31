@@ -28,7 +28,7 @@ mat_str = f"Mean Annual Temperature: {mat}°F"
 st.subheader(mat_str)
 
 st.subheader(
-    "Retrieve the RCP 8.5 design freezing index (°F) from the SNAP Data API")
+    "Retrieve the RCP 8.5 design freezing index (°F days) from the SNAP Data API")
 model = st.radio(
     "climate model for the design freezing index (only two are available)",
     ("GFDL-CM3", "NCAR-CCSM4"))
@@ -37,7 +37,7 @@ era = st.radio(
     ("2040-2069", "2070-2099"))
 
 FI = get_projected_design_fi_from_api(lat, lon, model, era)
-fi_str = f"Design Freezing Index: {FI} °F•days"
+fi_str = f"Design Freezing Index: {FI} °F days"
 st.subheader(fi_str)
 
 
@@ -48,7 +48,8 @@ with col1:
         "n factor converting air to surface freezing index", 0.1, 1.0, 0.75)
     d = st.slider("length of freezing duration (days)", 30, 300, 160)
     nFI = n * FI
-    magt = mat  # may be assumed to be the mat...?
+    # I've seen a few references where the ground temperature used in thermal ratio computation is assumed to equal the mean annual air temperature. I don't know if that is a common practice, but to be simple that is what I've done here. We could pull a ground temperature (but at what depth?) from the API if we needed to.
+    magt = mat
 
 with col2:
     st.header("SOIL PARAMETERS")
