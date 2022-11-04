@@ -87,7 +87,7 @@ def get_projected_mat_from_api(lat, lon, model, scenario, year_start, year_end):
 
 def get_projected_design_fi_from_api(lat, lon, model, era):
     """Query the SNAP Data API for design freezing index."""
-    api_url = "https://earthmaps.io/design_index/freezing/all/point/65.0628/-146.1627"
+    api_url = f"https://earthmaps.io/design_index/freezing/all/point/{lat}/{lon}"
     design_freezing_index_degF = requests.get(api_url).json()[model][era]["di"]
     return design_freezing_index_degF
 
