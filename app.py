@@ -17,7 +17,7 @@ model = st.radio(
     ("GFDL-CM3", "NCAR-CCSM4", "GISS-E2-R", "IPSL-CM5A-LR", "MRI-CGCM3"))
 scenario = st.radio(
     "RCP emissions scenario for the projected mean annual temperature",
-    ("rcp45", "rcp6", "rcp85"))
+    ("rcp45", "rcp85"))
 year_start, year_end = st.slider(
     'Select range for mean annual temperature summary',
     2007, 2100, (2040, 2069))
