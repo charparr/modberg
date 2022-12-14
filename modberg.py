@@ -52,7 +52,6 @@ def compute_avg_volumetric_specific_heat(dry_ro, wc_pct):
         c: volumetric specific heat (BTUs per cubic foot) • °F
     """
     c = dry_ro * (0.17 + (0.75 * (wc_pct / 100)))
-    print(c)
     return round(c, 2)
 
 
