@@ -2,18 +2,22 @@
 
 ## Testing and Development
 
+The development environment resides at `dev_tools/environment.yml`. To use this environment when testing and running the app locally, use the following chain of commands to manage the environment.
+
 - Create a `conda` environment
-  - `conda env create -f environment.yml`
+  - `conda env create -f dev_tools/environment.yml`
 - Activate the environment
-  - `conda activate modberg`
+  - `conda activate frost-depth`
 - Run the app locally
   - `streamlit run app.py`
+- Update the dev environment (if you need to add a package)
+  - `conda env export --no-builds | grep -v "^prefix: " > environment.yml`
 
-### Notes
+The production environment is the top-level `environment.yml` file. This environment is used to deploy the app on the Streamlit Community Cloud. There are likely other ways to configure this deploy, but this was the path of least friction at time of the initial development work. This is a minimal environment, and the framework (Streamlit) is not required as a dependency by the Streamlit Community Cloud. This environment is minimal because the deploy is more likely to be successful if the Streamlit Community Cloud platform is able to independently resolve dependencies and system-level libraries. To update this environment after adding a package, use the following command:
 
-Point of potential confusion: this repo includes a minimal `requirements.txt` file. This file is used to deploy the app on the Streamlit Community Cloud. There are likely other ways to configure this deploy, but this was the path of least friction at time of inital development.
+`conda env export --no-builds --from-history | grep -v "^prefix: " > environment.yml`
 
-## Background
+## Frost Depth Background
 
 From Bianchini and Gonzalez (2012)<sup>[[6]](#6)</sup>:
 
@@ -30,9 +34,9 @@ The Python code in `modberg.py` computes the frost depth. A simple web app (`app
 ### Assumptions
 
 - Frost depth is computed for a single layer of homogenous isotropic soil.
-- Heat flow is one-dimensional with the entire soil mass at its mean annual temperature prior to the start of the freezing season. The surface temperature changes suddenly as a step function from the mean annual temperature to a temperature v<sub>s</sub> degrees below freezing and remains at this new temperature throught the entire freezing season.
+- Heat flow is one-dimensional with the entire soil mass at its mean annual temperature prior to the start of the freezing season. The surface temperature changes suddenly as a step function from the mean annual temperature to a temperature v<sub>s</sub> degrees below freezing and remains at this new temperature throughout the entire freezing season.
 - The initial ground temperature is assumed to uniformly equal the mean annual air temperature. The upper boundary condition is represented by the surface freezing index.
-- The coeffcient λ considers the effect of the temperature changes in the soil mass and is a function of the fusion parameter μ and thermal ratio α. Traditionally, λ is found "manually" by using values of μ and α to consult a chart such as this one from Aldrich and Paynter (1966)<sup>[[3]](#3)</sup>:
+- The coefficient λ considers the effect of the temperature changes in the soil mass and is a function of the fusion parameter μ and thermal ratio α. Traditionally, λ is found "manually" by using values of μ and α to consult a chart such as this one from Aldrich and Paynter (1966)<sup>[[3]](#3)</sup>:
 
  <img src="static/correction_coeff.png" height="400">
 
@@ -51,14 +55,14 @@ def compute_coeff(mu, thermal_ratio):
     return round(lc, 2)
 ```
 
-This method removes manual consultation of the above figure and should produce coeffcients suitable for high latitudes (where the thermal ratio is low), though likely will over estimate frost depths for more temperate climates.
+This method removes manual consultation of the above figure and should produce coefficients suitable for high latitudes (where the thermal ratio is low), though likely will over estimate frost depths for more temperate climates.
 
 ### User Inputs
 
 - Soil Factors
   - Thermal Conductivity
   - Dry Density
-  - Water Content
+  - Gravimetric Water Content
 - Climate Factors
   - Mean Annual Temperature
   - Air Freezing Index
