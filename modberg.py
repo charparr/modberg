@@ -209,5 +209,4 @@ def compute_modified_bergrenn(dry_ro, wc_pct, mat, magt, d, nFI, k_avg, lat, lon
     mu = compute_fusion_parameter(v_s, c, L)
     lambda_coeff = compute_coeff(mu, thermal_ratio)
     frost_depth = compute_depth_of_freezing(lambda_coeff, k_avg, nFI, L)
-    print(L, c, v_s, v_o, thermal_ratio, mu, lambda_coeff)
     return frost_depth
